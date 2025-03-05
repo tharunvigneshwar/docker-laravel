@@ -8,14 +8,12 @@
 #
 # Note2: containrrr/watchtower service will auto update this container
 
-version: "2.4"
-
-name: videohub
+version: "3"
 
 services:
   videohub:
-    image: rsubr/php-apache-ubuntu:jammy
-    container_name: videohub.bit.lan
+    image: rsubr/php-apache-ubuntu:noble
+    container_name: # container name
     restart: always
 
     ports:
@@ -24,7 +22,7 @@ services:
     volumes:
       - ./www:/var/www
       - ./www/public:/var/www/html
-      - ./etc/php/8.1/apache2/conf.d/99-local.ini:/etc/php/8.1/apache2/conf.d/99-local.ini:ro
+      - ./etc/php/8.3/apache2/conf.d/99-local.ini:/etc/php/8.3/apache2/conf.d/99-local.ini:ro
       - ./etc/apache2/mods-enabled/mpm_prefork.conf:/etc/apache2/mods-enabled/mpm_prefork.conf:ro
 
     mem_limit: 2G
@@ -37,22 +35,21 @@ services:
         # - traefik.http.routers.prosafe.tls.certresolver=lets-encrypt
 
     depends_on:
-      - mysql
+      - pgsql
 
-  mysql:
-    image: mysql:8.0-debian
-    container_name: videohub-mysql.bit.lan
-    restart: always
-
-    environment:
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-
-    ports:
-      - 3306:3306
-
-    volumes:
-      - ./mysql-data:/var/lib/mysql
-      - ./mysql-conf/my.cnf:/root/.my.cnf
+  pgsql:
+      image: postgres:13
+      container_name: # container name
+      restart: always
+  
+      environment:
+        - POSTGRES_DB=${POSTGRES_DB}
+        - POSTGRES_USER=${POSTGRES_USER}
+        - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+  
+      ports:
+        - 5432:5432
+  
+      volumes:
+        - ./pgsql-data:/var/lib/postgresql/data
+        - ./pgsql-conf/postgresql.conf:/etc/postgresql/postgresql.conf

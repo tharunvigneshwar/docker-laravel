@@ -21,6 +21,8 @@ cp .env.example .env
 
 ```
 chown -Rh www-data storage/framework
+chown -Rh www-data storage
+
 ```
 
  #### Laravel Commands
