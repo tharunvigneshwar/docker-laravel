@@ -8,14 +8,11 @@
 #
 # Note2: containrrr/watchtower service will auto update this container
 
-version: "2.4"
-
-name: videohub
-
+name: app-name
 services:
-  videohub:
-    image: rsubr/php-apache-ubuntu:jammy
-    container_name: videohub.bit.lan
+  app-name:
+    image: rsubr/php-apache-ubuntu:noble
+    container_name: app-name.com
     restart: always
 
     ports:
@@ -24,24 +21,24 @@ services:
     volumes:
       - ./www:/var/www
       - ./www/public:/var/www/html
-      - ./etc/php/8.1/apache2/conf.d/99-local.ini:/etc/php/8.1/apache2/conf.d/99-local.ini:ro
+      - ./etc/php/8.3/apache2/conf.d/99-local.ini:/etc/php/8.3/apache2/conf.d/99-local.ini:ro
       - ./etc/apache2/mods-enabled/mpm_prefork.conf:/etc/apache2/mods-enabled/mpm_prefork.conf:ro
 
     mem_limit: 2G
 
-    labels:
-      - com.centurylinklabs.watchtower.enable=true
-        # - traefik.enable=true
-        # - traefik.http.routers.prosafe.rule=Host(`example.com`)
-        # - traefik.http.routers.prosafe.tls=true
-        # - traefik.http.routers.prosafe.tls.certresolver=lets-encrypt
+    # labels:
+    #   - com.centurylinklabs.watchtower.enable=true
+    #     # - traefik.enable=true
+    #     # - traefik.http.routers.prosafe.rule=Host(`example.com`)
+    #     # - traefik.http.routers.prosafe.tls=true
+    #     # - traefik.http.routers.prosafe.tls.certresolver=lets-encrypt
 
     depends_on:
       - mysql
 
   mysql:
     image: mysql:8.0-debian
-    container_name: videohub-mysql.bit.lan
+    container_name: app-name-mysql
     restart: always
 
     environment:
